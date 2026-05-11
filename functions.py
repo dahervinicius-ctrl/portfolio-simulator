@@ -129,6 +129,9 @@ def rebalance(df_1, weights, volume_fee = 0.001):
     return rebalance
 
 
+
+'''
+
 def make_portfolio(port, rebalancement_frequency=10, volume_fee = 0, initial_investment=1000):
 
     for i in range(int(np.floor(len(port)/rebalancement_frequency))):
@@ -154,6 +157,45 @@ def make_portfolio(port, rebalancement_frequency=10, volume_fee = 0, initial_inv
     port_df["portfolio"] = port_df.sum(axis=1)
 
     return port_df    
-            
+'''
+
+def make_portfolio(port, rebalancement_frequency=10, volume_fee = 0, initial_investment=1000):
+    strategies.choose_strategy() #based on the strategy to be used, need to call different "make_portfolio" functions for each strategy 
+
+
+
+
+
+
+
+def make_equal_weight_portfolio(port, rebalancement_frequency=10, volume_fee = 0, initial_investment=1000):
+
+    weights = strategies.equal_weights(port)
+
+    for i in range(int(np.floor(len(port)/rebalancement_frequency))):
+
+        aux1 = rebalancement_frequency*(i)
+        aux2 = rebalancement_frequency*(i+1)
+
+        perc = (port[weights.index].pct_change() + 1)
+
+        if i == 0:
+            capital_aloc = perc.iloc[aux1:aux2][weights.index].cumprod() * weights * initial_investment
+            capital_aloc.iloc[0] = weights * initial_investment
+            port_df = capital_aloc
+        else:
+            rebalancement = rebalance(capital_aloc, weights, volume_fee)
+            capital_aloc = perc.iloc[aux1:aux2][weights.index].cumprod() * (capital_aloc.iloc[-1] + rebalancement)
+            port_df = pd.concat([port_df, capital_aloc])
+
+    rebalancement = rebalance(capital_aloc, weights, volume_fee)
+    capital_aloc = perc.iloc[aux2:][weights.index].cumprod() * (capital_aloc.iloc[-1] + rebalancement)
+    port_df = pd.concat([port_df, capital_aloc])
+    port_df["portfolio"] = port_df.sum(axis=1)
+
+    return port_df
+
+
+
 def portfolio_stats(port):
     pass
