@@ -1,6 +1,8 @@
 import pandas as pd
 import yfinance as yf
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 
 def overview(port, ibov=True):
@@ -9,12 +11,10 @@ def overview(port, ibov=True):
         ibov = yf.download("^BVSP", start=port.index[0])["Close"]
         analysis = pd.concat([port, ibov], axis=1)
     
-    print(f'total return (index = 1): {analysis.iloc[-1]/analysis.iloc[0]} \n')
-    print(f'standard deviation in %: {100* (np.std(analysis)/np.mean(analysis))}')
+    print(f'total return (index = 1): \n {analysis.iloc[-1]/analysis.iloc[0]} \n')
+    print(f'standard deviation in %: \n {100* (np.std(analysis)/np.mean(analysis))}')
 
     analysis = analysis/analysis.iloc[0]
-
-    import matplotlib.pyplot as plt
 
     plt.figure(figsize=(12, 6))
 
