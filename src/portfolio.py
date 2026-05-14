@@ -39,6 +39,7 @@ class Portfolio():
             return 0
                 
         self.portfolio_total = self.portfolio_composition.sum(axis=1)
+        self.sharpe = (self.portfolio_total.pct_change().mean() / self.portfolio_total.pct_change().std()) * np.sqrt(252)
         return self.portfolio_composition
         
 

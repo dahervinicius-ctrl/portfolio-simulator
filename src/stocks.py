@@ -28,17 +28,12 @@ class Stocks():
 
     def random_selection(self, number_of_stocks: int =5, period: str="3Y") -> list[str]:
 
-        print(f'random_stocks_list pre: {self.random_stocks_list}')
-
         self.random_stocks_list = [] # make sure to always re-do the portfolio for every call
         self.cleaned_stocks_list = []
-
-        print(f'random_stocks_list pos: {self.random_stocks_list}')
 
         self.period = period
 
         while len(self.random_stocks_list) < number_of_stocks:
-            print("entrei no while")
             aux = random.sample(self.stocks_names, number_of_stocks)
             self.cleaned_stocks(aux, period)
 

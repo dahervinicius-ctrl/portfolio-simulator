@@ -34,9 +34,9 @@ class Strategy():
     
         rebalance = weights * df_1.iloc[-1].sum() - df_1.iloc[-1][weights.index]
         vol_fee = np.absolute(rebalance) * self.volume_fee
-        rebalance = rebalance - self.volume_fee
-        print(f'rebalance at: {df_1.index[-1]} \n')
-        print(f'post fee rebalance: {rebalance[weights.index]} (total fee: {vol_fee.sum()}) \n')
+        rebalance = rebalance - vol_fee
+        #print(f'rebalance at: {df_1.index[-1]} \n')
+        #print(f'post fee rebalance: {rebalance[weights.index]} (total fee: {vol_fee.sum()}) \n')
         return rebalance
     
 
@@ -49,18 +49,14 @@ class Strategy():
 
             for i in range(int(np.floor(len(self.returns)/self.rebalancement_frequency))):
 
-                print(f'i: {i}')
-
                 aux1 = self.rebalancement_frequency*(i)
                 aux2 = self.rebalancement_frequency*(i+1)
 
                 if i == 0:
-                    print("entrou em i == 0")
                     capital_aloc = perc.iloc[aux1:aux2][weights.index].cumprod() * weights * self.initial_capital
                     capital_aloc.iloc[0] = weights * self.initial_capital
                     portfolio_composition = capital_aloc
                 else:
-                    print("entrou em i != 0")
                     rebalancement = self.rebalance(capital_aloc, weights)
                     capital_aloc = perc.iloc[aux1:aux2][weights.index].cumprod() * (capital_aloc.iloc[-1] + rebalancement)
                     portfolio_composition = pd.concat([portfolio_composition, capital_aloc])
