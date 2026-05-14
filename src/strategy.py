@@ -4,6 +4,7 @@ from scipy.optimize import minimize
 
 from .stocks import Stocks
 
+# think about how to implement a more robust linkage to the stocks class to get the analysed period without problems
 
 class Strategy():
 
